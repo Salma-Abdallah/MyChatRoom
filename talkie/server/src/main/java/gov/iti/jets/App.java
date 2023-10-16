@@ -1,13 +1,29 @@
 package gov.iti.jets;
 
+// import org.modelmapper.ModelMapper;
+
+import gov.iti.jets.dto.UserDto;
+import gov.iti.jets.persistence.daos.UserDao;
+// import gov.iti.jets.persistence.daos.UserDao;
+import gov.iti.jets.services.UserServices;
+
 /**
  * Hello world!
  *
  */
 public class App 
 {
+    
     public static void main( String[] args )
     {
+        UserDao userDao = new UserDao();
+        // ModelMapper modelMapper = new ModelMapper();
+        // UserDto userDto = new UserDto();
+        // UserServices userServices = new UserServices();
         System.out.println( "Hello JAvA!" );
+        // userDto = userServices.findUserById(51);
+
+        // System.out.println(userDto);
+        System.out.println(userDao.findUserById(50));
     }
 }
