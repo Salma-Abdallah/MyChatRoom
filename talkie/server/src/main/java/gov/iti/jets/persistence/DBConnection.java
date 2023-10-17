@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
+
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 
 import gov.iti.jets.App;
@@ -29,12 +32,6 @@ public enum DBConnection {
             e.printStackTrace();
         }
 
-    }
-    // DBConnection() {
-    //     dataSource = new MysqlConnectionPoolDataSource();
-    //     dataSource.setURL("jdbc:mysql://localhost:3306/jets4");
-    //     dataSource.setUser("sara");
-    //     dataSource.setPassword("1234");
-    // }
     
+    }
 }

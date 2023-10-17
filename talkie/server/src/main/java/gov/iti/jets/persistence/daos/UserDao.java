@@ -16,7 +16,6 @@ import gov.iti.jets.persistence.DBConnection;
 
 public class UserDao {
 
-
     public UserEntity saveUser(UserEntity userEntity) {
 
         String query = """
@@ -61,7 +60,7 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
-    
+
     public Optional<UserEntity> findUserByPhoneNumber(String phoneNumber) {
         String query = """
                  SELECT * FROM users where phone_number = ?
@@ -76,23 +75,26 @@ public class UserDao {
         return getUserEntity(email, query);
     }
 
-    // public Optional<List<UserEntity>> findUserByOnlineStatus(String onlineStatus) {
-    //     String query = """
+    public List<UserEntity> findUserByOnlineStatus(String onlineStatus) {
+        String query = """
 
-    //             SELECT * FROM users where online_status = ?
-    //             """;
-    //     return getUsersEntity(onlineStatus, query);
-    // }
-    public Optional<List<UserEntity>> findUserByOnlineStatus(String onlineStatus, String query) {
+                SELECT * FROM users where online_status = ?
+                """;
+        return getUserEntities(onlineStatus, query);
+    }
+
+    private List<UserEntity> getUserEntities(String providedInput, String query) {
         try (Connection connection = DBConnection.INSTANCE.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, onlineStatus);
+            statement.setString(1, providedInput);
             ResultSet result = statement.executeQuery();
-            List<UserEntity> users = new ArrayList<>();
+
+            List<UserEntity> userEntities = new ArrayList<>();
             while (result.next()) {
-                users.add(resultSetToUserEntity(result));
+                userEntities.add(resultSetToUserEntity(result));
             }
-            return Optional.empty();
+
+            return userEntities;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -145,5 +147,21 @@ public class UserDao {
         return new UserEntity(id, userName, phoneNumber, email, password, gender, country, birthDate, onlineStatus, bio,
                 imageUrl, createdAt, salt);
     }
-       
+
+    // public Optional<List<UserEntity>> findUserByOnlineStatus(String onlineStatus,
+    // String query) {
+    // try (Connection connection = DBConnection.INSTANCE.getConnection();
+    // PreparedStatement statement = connection.prepareStatement(query)) {
+    // statement.setString(1, onlineStatus);
+    // ResultSet result = statement.executeQuery();
+    // List<UserEntity> users = new ArrayList<>();
+    // while (result.next()) {
+    // users.add(resultSetToUserEntity(result));
+    // }
+    // return Optional.empty();
+    // } catch (SQLException e) {
+    // throw new RuntimeException(e);
+    // }
+    // }
+
 }
