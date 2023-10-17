@@ -16,6 +16,7 @@ public class RegularChatDto extends ChatDto{
         this.chatId = chatId;
         this.firstParticipant = firstParticipant;
     }
+    public RegularChatDto (){}
 
     public String getChatId() {
         return chatId;
