@@ -3,7 +3,7 @@
 /workspace.xml
 
 #Ignore the "my_directory" directory and its contents
-resources/
+resources/*
 
 # Compiled class file
 *.class
