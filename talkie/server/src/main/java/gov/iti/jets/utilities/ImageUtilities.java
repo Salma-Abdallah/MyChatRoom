@@ -28,7 +28,6 @@ public class ImageUtilities {
             throw new RuntimeException(e);
         }
     }
-
     public static byte[] loadImage(String url) {
         try {
             return Files.readAllBytes(Paths.get(url));
