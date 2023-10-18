@@ -35,7 +35,7 @@ public class ChatServices {
     // }
 
     public ChatDto findChatById(String uuid) {
-        return modelMapper.map(chatDao.save(uuid), ChatDto.class);
+        return modelMapper.map(chatDao.findChatById(uuid), ChatDto.class);
     }
 
     public int deleteChat(String id) {
@@ -85,7 +85,7 @@ public class ChatServices {
     }
 
     public List<GroupChatDto> findAllGroupChatsByOwnerId(Integer ownerId) {
-         List<GroupChatEntity> groupChatEntities = groupChatDao.findAllGroupChatsByOwnerId(ownerId);
+        List<GroupChatEntity> groupChatEntities = groupChatDao.findAllGroupChatsByOwnerId(ownerId);
         List<GroupChatDto> groupChatDtos = new ArrayList<>();
 
         for (GroupChatEntity groupChatEntity : groupChatEntities) {

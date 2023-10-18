@@ -5,10 +5,10 @@ import java.util.List;
 public class GroupChatDto extends ChatDto{
     private static final long serialVersionUID = 5887637195618767821L;
 
-     private UserDto owner;
+     private int owner;
     private String name;
     private List<UserDto> participants;
-    public GroupChatDto(String chatId, UserDto owner, String name, List<UserDto> participants) {
+    public GroupChatDto(String chatId, int owner, String name, List<UserDto> participants) {
         this.chatId = chatId;
         this.owner = owner;
         this.name = name;
@@ -23,11 +23,11 @@ public class GroupChatDto extends ChatDto{
         this.chatId = chatId;
     }
 
-    public UserDto getOwner() {
+    public int getOwner() {
         return owner;
     }
 
-    public void setOwner(UserDto owner) {
+    public void setOwner(int owner) {
         this.owner = owner;
     }
 
