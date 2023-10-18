@@ -29,7 +29,6 @@ public class App {
         ModelMapper modelMapper = new ModelMapper();
         int userId; 
         UserDao userDao = new UserDao();
-        // ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = new UserDto();
         UserServices userServices = new UserServices();
         GroupCahtDao groupCahtDao = new GroupCahtDao();
