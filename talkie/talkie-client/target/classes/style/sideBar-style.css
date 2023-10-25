@@ -1,0 +1,5 @@
+.combo-box-popup > .list-view {
+    -fx-pref-width: 50;
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style/login-style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" opacity="0.94" prefHeight="386.0" prefWidth="370.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+         <center>
+            <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Login" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="31.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="150.0" right="150.0" top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Phone number :" textFill="WHITE">
+                     <font>
+                        <Font name="System Italic" size="17.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="20.0" top="60.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="phoneNoTextField" prefHeight="35.0" prefWidth="330.0" promptText="Enter your phone number">
+                     <VBox.margin>
+                        <Insets left="30.0" right="30.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="361.0">
+                     <VBox.margin>
+                        <Insets left="20.0" top="150.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label id="labelp" fx:id="previousLabel" text="&lt; Previous page" textFill="WHITE" underline="true">
+                           <font>
+                              <Font name="System Italic" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label id="labelp" fx:id="nextLabel" layoutX="10.0" layoutY="10.0" text="Next page &gt;" textFill="WHITE" underline="true">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="160.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </center>
+</BorderPane>

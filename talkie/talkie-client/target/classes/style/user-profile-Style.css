@@ -1,0 +1,20 @@
+/* .layout{
+	-fx-background-image:url('../images/loginBackground.jpg');
+	-fx-background-size:cover;
+} */
+
+
+.button{
+	-fx-background-color: 
+        #000000,
+        linear-gradient(#000000 50%, white 100%),
+        radial-gradient(center 50% -40%, radius 200%, #000000 45%, rgba(230,230,230,0) 50%);
+    	-fx-background-radius: 30;
+    	-fx-background-insets: 0,1,1;
+    	-fx-text-fill: white;
+    	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.validationError{
+	-fx-text-fill: #ff0000;
+}
