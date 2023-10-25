@@ -148,20 +148,46 @@ public class UserDao {
                 imageUrl, createdAt, salt);
     }
 
-    // public Optional<List<UserEntity>> findUserByOnlineStatus(String onlineStatus,
-    // String query) {
-    // try (Connection connection = DBConnection.INSTANCE.getConnection();
-    // PreparedStatement statement = connection.prepareStatement(query)) {
-    // statement.setString(1, onlineStatus);
-    // ResultSet result = statement.executeQuery();
-    // List<UserEntity> users = new ArrayList<>();
-    // while (result.next()) {
-    // users.add(resultSetToUserEntity(result));
-    // }
-    // return Optional.empty();
-    // } catch (SQLException e) {
-    // throw new RuntimeException(e);
-    // }
-    // }
+    public int update(int id, UserEntity userEntity) {
+        int result;
+        String query = """
+                 UPDATE users SET username = ?, created_at = ? email = ?,
+                 phone_number = ?, gender = ?, password = ?, birth_date = ?,
+                 country = ?, online_status = ?, bio = ?, picture = ? WHERE ID = ?
+                """;
+        try (Connection connection = DBConnection.INSTANCE.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, userEntity.getUserName());
+            statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            statement.setString(3, userEntity.getEmail());
+            statement.setString(4, userEntity.getPhoneNumber());
+            statement.setString(5, userEntity.getGender());
+            statement.setString(6, userEntity.getPassword());
+            statement.setString(7, userEntity.getBirthDate().toString());
+            statement.setString(8, userEntity.getCountry());
+            statement.setString(9, userEntity.getOnlineStatus());
+            statement.setString(10, userEntity.getBio());
+            statement.setString(11, userEntity.getPictureUrl());
+            statement.setInt(12, id);
+            result = statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 
+    public int updateStatusByUserPhoneNumber(String phoneNumber, String onlineStatus){
+        String query = """
+                        UPDATE users SET online_status = ?  WHERE phone_number = ?
+                       """;
+        try (Connection connection = DBConnection.INSTANCE.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, onlineStatus);
+            statement.setString(2, phoneNumber);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
 }

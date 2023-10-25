@@ -4,16 +4,16 @@ package gov.iti.jets.entities;
 
 public class RegularChatEntity {
     private String id;
-    private Integer firstParticipantId;
-    private Integer secondParticipantId;
+    private UserEntity firstParticipantId;
+    private UserEntity secondParticipantId;
 
-    public RegularChatEntity(String id, Integer firstParticipantId, Integer secondParticipantId) {
+    public RegularChatEntity(String id, UserEntity firstParticipantId, UserEntity secondParticipantId) {
         this.id = id;
         this.firstParticipantId = firstParticipantId;
         this.secondParticipantId = secondParticipantId;
 
     }
-    public RegularChatEntity(Integer firstParticipantId, Integer secondParticipantId) {
+    public RegularChatEntity(UserEntity firstParticipantId, UserEntity secondParticipantId) {
         this.firstParticipantId = firstParticipantId;
         this.secondParticipantId = secondParticipantId;
     }
@@ -26,19 +26,19 @@ public class RegularChatEntity {
         this.id = id;
     }
 
-    public Integer getFirstParticipantId() {
+    public UserEntity getFirstParticipantId() {
         return firstParticipantId;
     }
 
-    public void setFirstParticipantId(Integer firstParticipantId) {
+    public void setFirstParticipantId(UserEntity firstParticipantId) {
         this.firstParticipantId = firstParticipantId;
     }
 
-    public Integer getSecondParticipantId() {
+    public UserEntity getSecondParticipantId() {
         return secondParticipantId;
     }
 
-    public void setSecondParticipantId(Integer secondParticipantId) {
+    public void setSecondParticipantId(UserEntity secondParticipantId) {
         this.secondParticipantId = secondParticipantId;
     }
 

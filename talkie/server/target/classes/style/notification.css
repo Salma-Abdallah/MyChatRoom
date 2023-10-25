@@ -1,0 +1,7 @@
+.text{
+	-fx-text-fill:#f7c9b6;
+}
+#notification{
+	-fx-background-color:#549BAD;
+	-fx-background-radius:20;
+}

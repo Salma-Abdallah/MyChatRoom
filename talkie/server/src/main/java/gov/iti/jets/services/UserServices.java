@@ -43,4 +43,11 @@ public class UserServices {
     public String getOnlineStatusByUserPhoneNumber (String phoneNumber){
         return userDao.getOnlineStatusByPhoneNumber(phoneNumber);
     }  
+    public int update(UserDto userDto) {
+        return userMapper.update(userDto);
+    }
+
+    public int updateStatusByUserPhoneNumber(String phoneNumber, String onlineStatus){
+        return userDao.updateStatusByUserPhoneNumber(phoneNumber, onlineStatus);
+    }
 }

@@ -1,20 +1,22 @@
 package gov.iti.jets.dto;
 
+import gov.iti.jets.entities.UserEntity;
+
 public class RegularChatDto extends ChatDto{
     private static final long serialVersionUID = 5887637195618767821L;
-    private int firstParticipant;
-    private int secondParticipant;
+    private UserDto firstParticipant;
+    private UserDto secondParticipant;
 
-    public RegularChatDto(String chatId, int firstParticipant, int secondParticipant) {
+    public RegularChatDto(String chatId, UserDto firstParticipant, UserDto secondParticipant) {
         this.chatId = chatId;
         this.firstParticipant = firstParticipant;
         this.secondParticipant = secondParticipant;
     }
 
-    // public RegularChatDto(String chatId, UserDto firstParticipant) {
-    //     this.chatId = chatId;
-    //     this.firstParticipant = firstParticipant;
-    // }
+    public RegularChatDto(String chatId, UserDto firstParticipant) {
+        this.chatId = chatId;
+        this.firstParticipant = firstParticipant;
+    }
     public RegularChatDto (){}
 
     public String getChatId() {
@@ -25,18 +27,18 @@ public class RegularChatDto extends ChatDto{
         this.chatId = chatId;
     }
 
-    public int getFirstParticipant() {
+    public UserDto getFirstParticipant() {
         return firstParticipant;
     }
-    public void setFirstParticipant(int firstParticipant) {
+    public void setFirstParticipant(UserDto firstParticipant) {
         this.firstParticipant = firstParticipant;
     }
 
-    public int getSecondParticipant() {
+    public UserDto getSecondParticipant() {
         return secondParticipant;
     }
 
-    public void setSecondParticipant(int secondParticipant) {
+    public void setSecondParticipant(UserDto secondParticipant) {
         this.secondParticipant = secondParticipant;
     }
 

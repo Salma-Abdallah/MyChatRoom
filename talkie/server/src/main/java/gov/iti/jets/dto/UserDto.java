@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public class UserDto implements Serializable {
      private static final long serialVersionUID = 3425388182302811873L;
 
+    private Integer id;
     private String userName;
     private String phoneNumber;
     private String email;
@@ -21,7 +22,7 @@ public class UserDto implements Serializable {
 
     public UserDto() {}
 
-    public UserDto(String userName, String phoneNumber, String email, String password,
+    public UserDto(Integer id, String userName, String phoneNumber, String email, String password,
                 String salt, String gender, String country, LocalDate birthDate,
                 String onlineStatus, String bio, byte[] picture, String pictureExtension) {
         this.userName = userName;
@@ -36,6 +37,15 @@ public class UserDto implements Serializable {
         this.bio = bio;
         this.picture = picture;
         this.pictureExtension = pictureExtension;
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public UserDto(String userName, String phoneNumber, String email, String password,

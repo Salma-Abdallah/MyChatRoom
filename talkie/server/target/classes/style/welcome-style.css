@@ -1,0 +1,14 @@
+.root{
+	-fx-background-image:url('../images/loginBackground.jpg');
+	-fx-background-size:cover;
+}
+
+.label{
+	-fx-text-fill: #549bad;
+}
+
+#labelp:hover{
+-fx-text-fill: #258096;
+}
+
+

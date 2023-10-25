@@ -2,17 +2,22 @@ package gov.iti.jets.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 
 import gov.iti.jets.dto.ChatDto;
 import gov.iti.jets.dto.GroupChatDto;
 import gov.iti.jets.dto.RegularChatDto;
+import gov.iti.jets.dto.UserDto;
 import gov.iti.jets.entities.GroupChatEntity;
 import gov.iti.jets.entities.RegularChatEntity;
+import gov.iti.jets.entities.UserEntity;
+import gov.iti.jets.mappers.UserMapper;
 import gov.iti.jets.persistence.daos.ChatDao;
 import gov.iti.jets.persistence.daos.GroupCahtDao;
 import gov.iti.jets.persistence.daos.RegularChatDao;
+import gov.iti.jets.persistence.daos.UserDao;
 
 public class ChatServices {
 
@@ -20,6 +25,9 @@ public class ChatServices {
     private ChatDao chatDao = new ChatDao();
     private RegularChatDao regularChatDao = new RegularChatDao();
     private GroupCahtDao groupChatDao = new GroupCahtDao();
+    private UserMapper userMapper = new UserMapper();
+    private UserDao userDao = new UserDao();
+
 
     public ChatServices(ModelMapper modelMapper, ChatDao chatDao, RegularChatDao regularChatDao,
             GroupCahtDao groupChatDao) {
@@ -30,9 +38,27 @@ public class ChatServices {
     }
     public ChatServices(){}
 
-    // public String save(String uuid) {
-    // return chatDao.save(uuid);
-    // }
+    public Optional<RegularChatDto> saveRegularChat(String firstPhoneNumber, String secondPhoneNumber) {
+        Optional<UserEntity> firstParticipantOptional = userDao.findUserByPhoneNumber(firstPhoneNumber);
+        Optional<UserEntity> secondParticipantOptional = userDao.findUserByPhoneNumber(secondPhoneNumber);
+        if (firstParticipantOptional.isPresent() && secondParticipantOptional.isPresent()) {
+            UserEntity firstParticipant = firstParticipantOptional.get();
+            UserEntity secondParticipant = secondParticipantOptional.get();
+            List<RegularChatEntity> regularChatEntities = regularChatDao.findAllRegChatsByUserID(firstParticipant.getId());
+
+            long count = regularChatEntities.stream().filter((entity) ->
+                    secondParticipant.getId() == entity.getFirstParticipantId().getId() || secondParticipant.getId() == entity.getSecondParticipantId().getId()
+            ).count();
+
+            if (count == 0) {
+                RegularChatEntity regularChatEntity = regularChatDao.save(new RegularChatEntity(firstParticipant, secondParticipant));
+                return Optional.of(new RegularChatDto(regularChatEntity.getId(),
+                        userMapper.userEntityToDto(firstParticipant),
+                        userMapper.userEntityToDto(secondParticipant)));
+            } else return Optional.empty();
+        }
+        return Optional.empty();
+    }
 
     public ChatDto findChatById(String uuid) {
         return modelMapper.map(chatDao.findChatById(uuid), ChatDto.class);
@@ -47,9 +73,11 @@ public class ChatServices {
         return modelMapper.map(regularChatDao.save(regularChatEntity), RegularChatDto.class);
     }
 
-    public RegularChatDto findRegularChatByParticipantsIds(Integer firstParticipantId,
-            Integer secondParticipantId) {
-        return modelMapper.map(regularChatDao.findRegularChatByParticipantsIds(firstParticipantId, secondParticipantId),
+    public RegularChatDto findRegularChatByParticipantsIds(UserDto firstParticipantId,
+            UserDto secondParticipantId) {
+                UserEntity fEntity = userMapper.userDtoToUserEntity(firstParticipantId);
+                UserEntity sEntity = userMapper.userDtoToUserEntity(secondParticipantId);
+        return modelMapper.map(regularChatDao.findRegularChatByParticipantsIds(fEntity, sEntity),
                 RegularChatDto.class);
     }
 
@@ -64,7 +92,7 @@ public class ChatServices {
                 RegularChatDto.class);
     }
 
-    public List<RegularChatDto> findAllRegChatsByUserID(int userId) {
+    public List<RegularChatDto> findAllRegChatsByUserID (int userId) {
         List<RegularChatEntity> regularChatEntities = regularChatDao.findAllRegChatsByUserID(userId);
         List<RegularChatDto> regularChatDtos = new ArrayList<>();
 
@@ -105,6 +133,22 @@ public class ChatServices {
 
     public int deleteGroupChat(String id) {
         return groupChatDao.delete(id);
+    }
+    public List<RegularChatDto> getAllRegularChats(String phoneNumber) {
+         List<RegularChatEntity> regularChatEntities = regularChatDao.findAllRegularChatByPhoneNum(phoneNumber);
+        List<RegularChatDto> regularChatDtos = new ArrayList<>();
+        for (RegularChatEntity regularChatEntity : regularChatEntities){
+            RegularChatDto regularChatDto = modelMapper.map(regularChatEntity, RegularChatDto.class);
+            regularChatDtos.add(regularChatDto);
+        }
+        return regularChatDtos;
+    }
+
+    public List<GroupChatDto> getAllGroupChats(String phoneNumber) {
+        return null;
+    }
+    public Optional<GroupChatDto> createGroupChat(String phoneNumber, String groupName) {
+        return null;
     }
 
 

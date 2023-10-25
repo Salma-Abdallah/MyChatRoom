@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import gov.iti.jets.entities.RegularChatEntity;
+import gov.iti.jets.entities.UserEntity;
 import gov.iti.jets.persistence.DBConnection;
 
 public class RegularChatDao {
@@ -25,8 +26,8 @@ public class RegularChatDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, chatDao.save(uuid));
-            statement.setInt(2, regularChatEntity.getFirstParticipantId());
-            statement.setInt(3, regularChatEntity.getSecondParticipantId());
+            statement.setInt(2, regularChatEntity.getFirstParticipantId().getId());
+            statement.setInt(3, regularChatEntity.getSecondParticipantId().getId());
             statement.executeUpdate();
             regularChatEntity.setId(uuid);
             return regularChatEntity;
@@ -36,8 +37,8 @@ public class RegularChatDao {
         }
     }
 
-    public Optional<RegularChatEntity> findRegularChatByParticipantsIds(Integer firstParticipantId,
-            Integer secondParticipantId) {
+    public Optional<RegularChatEntity> findRegularChatByParticipantsIds(UserEntity firstParticipant,
+            UserEntity secondParticipant) {
         String query = """
                     SELECT * FROM regular_chat rc
                     WHERE (rc.first_participant_id = ? AND rc.second_participant_id = ?)
@@ -45,15 +46,28 @@ public class RegularChatDao {
                 """;
         try (Connection connection = DBConnection.INSTANCE.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, firstParticipantId);
-            statement.setInt(2, secondParticipantId);
-            statement.setInt(3, secondParticipantId);
-            statement.setInt(4, firstParticipantId);
+            statement.setInt(1, firstParticipant.getId());
+            statement.setInt(2, secondParticipant.getId());
+            statement.setInt(3, secondParticipant.getId());
+            statement.setInt(4, firstParticipant.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new RegularChatEntity(resultSet.getString("id"),
-                        resultSet.getInt("first_participant_id"),
-                        resultSet.getInt("second_participant_id")));
+                int firstParticipantId = resultSet.getInt("first_participant_id");
+                int secondParticipantId = resultSet.getInt("second_participant_id");
+
+                UserDao userDao = new UserDao();
+                Optional<UserEntity> firstPartiUserOptional = userDao.findUserById(firstParticipantId);
+                Optional<UserEntity> secondPartiUserOptional = userDao.findUserById(secondParticipantId);
+
+                UserEntity firstPartiUser = firstPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+                UserEntity secondPartiUser = secondPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+
+                return Optional.of(new RegularChatEntity(
+                        resultSet.getString("id"),
+                        firstPartiUser,
+                        secondPartiUser));
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -76,9 +90,22 @@ public class RegularChatDao {
             statement.setString(2, phoneNumber2);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new RegularChatEntity(resultSet.getString("id"),
-                        resultSet.getInt("first_participant_id"),
-                        resultSet.getInt("second_participant_id")));
+                int firstParticipantId = resultSet.getInt("first_participant_id");
+                int secondParticipantId = resultSet.getInt("second_participant_id");
+
+                UserDao userDao = new UserDao();
+                Optional<UserEntity> firstPartiUserOptional = userDao.findUserById(firstParticipantId);
+                Optional<UserEntity> secondPartiUserOptional = userDao.findUserById(secondParticipantId);
+
+                UserEntity firstPartiUser = firstPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+                UserEntity secondPartiUser = secondPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+
+                return Optional.of(new RegularChatEntity(
+                        resultSet.getString("id"),
+                        firstPartiUser,
+                        secondPartiUser));
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -86,48 +113,37 @@ public class RegularChatDao {
         }
     }
 
-    // public Optional<RegularChatEntity> findRegularChatByParticipantPhoneNumber(String phoneNumber) {
-    //     String query = """
-    //                      SELECT rc.*
-    //             FROM regular_chat rc
-    //             INNER JOIN user u1 ON rc.first_participant_id = u1.id
-    //             INNER JOIN user u2 ON rc.second_participant_id = u2.id
-    //             WHERE u1.phone_number = ? OR u2.phone_number = ?
-    //                """;
-    //     try (Connection connection = DBConnection.INSTANCE.getConnection();
-    //             PreparedStatement statement = connection.prepareStatement(query)) {
-    //         statement.setString(1, phoneNumber);
-    //         ResultSet resultSet = statement.executeQuery();
-    //         if (resultSet.next()) {
-    //             return Optional.of(new RegularChatEntity(resultSet.getString("id"),
-    //                     resultSet.getInt("first_participant_id"),
-    //                     resultSet.getInt("second_participant_id")));
-    //         }
-    //         return Optional.empty();
-    //     } catch (SQLException e) {
-    //         throw new RuntimeException(e);
-    //     }
-    // }
-
-
     public Optional<RegularChatEntity> findRegularChatByParticipantPhoneNumber(String phoneNumber) {
         String query = """
-            SELECT rc.*
-            FROM regular_chat rc
-            INNER JOIN users u1 ON rc.first_participant_id = u1.id
-            INNER JOIN users u2 ON rc.second_participant_id = u2.id
-            WHERE u1.phone_number = ? OR u2.phone_number = ?
-        """;
-    
+                    SELECT rc.*
+                    FROM regular_chat rc
+                    INNER JOIN users u1 ON rc.first_participant_id = u1.id
+                    INNER JOIN users u2 ON rc.second_participant_id = u2.id
+                    WHERE u1.phone_number = ? OR u2.phone_number = ?
+                """;
+
         try (Connection connection = DBConnection.INSTANCE.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, phoneNumber);
-            statement.setString(2, phoneNumber); // Provide the same value for the second parameter
+            statement.setString(2, phoneNumber);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(new RegularChatEntity(resultSet.getString("id"),
-                        resultSet.getInt("first_participant_id"),
-                        resultSet.getInt("second_participant_id")));
+                int firstParticipantId = resultSet.getInt("first_participant_id");
+                int secondParticipantId = resultSet.getInt("second_participant_id");
+
+                UserDao userDao = new UserDao();
+                Optional<UserEntity> firstPartiUserOptional = userDao.findUserById(firstParticipantId);
+                Optional<UserEntity> secondPartiUserOptional = userDao.findUserById(secondParticipantId);
+
+                UserEntity firstPartiUser = firstPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+                UserEntity secondPartiUser = secondPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+
+                return Optional.of(new RegularChatEntity(
+                        resultSet.getString("id"),
+                        firstPartiUser,
+                        secondPartiUser));
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -151,7 +167,15 @@ public class RegularChatDao {
                 String chat_id = result.getString("id");
                 int firstParticipantId = result.getInt("first_participant_id");
                 int secondParticipantId = result.getInt("second_participant_id");
-                regularChatEntities.add(new RegularChatEntity(chat_id, firstParticipantId, secondParticipantId));
+                UserDao userDao = new UserDao();
+                Optional<UserEntity> firstPartiUserOptional = userDao.findUserById(firstParticipantId);
+                Optional<UserEntity> secondPartiUserOptional = userDao.findUserById(secondParticipantId);
+                UserEntity firstPartiUser = firstPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+                UserEntity secondPartiUser = secondPartiUserOptional
+                        .orElseThrow(() -> new RuntimeException("User not found."));
+
+                regularChatEntities.add(new RegularChatEntity(chat_id, firstPartiUser, secondPartiUser));
             }
             connection.close();
         } catch (SQLException e) {
@@ -174,6 +198,44 @@ public class RegularChatDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<RegularChatEntity> findAllRegularChatByPhoneNum(String phoneNum) {
+        String query = """
+                    SELECT rc.*
+                    FROM regular_chat rc
+                    INNER JOIN users u1 ON rc.first_participant_id = u1.id
+                    INNER JOIN users u2 ON rc.second_participant_id = u2.id
+                    WHERE u1.phone_number = ? OR u2.phone_number = ?
+                """;
+        try (Connection connection = DBConnection.INSTANCE.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, phoneNum);
+            statement.setString(2, phoneNum);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<RegularChatEntity> chatEntities = new ArrayList<>();
+            UserDao userDao = new UserDao();
+            while (resultSet.next()) {
+                int firstParticipantId = resultSet.getInt("first_participant_id");
+                int secondParticipantId = resultSet.getInt("second_participant_id");
+                Optional<UserEntity> firstPartiUserOptional = userDao.findUserById(firstParticipantId);
+                Optional<UserEntity> secondPartiUserOptional = userDao.findUserById(secondParticipantId);
+                if (firstPartiUserOptional.isPresent() && secondPartiUserOptional.isPresent()) {
+                    UserEntity firstPartiUser = firstPartiUserOptional.get();
+                    UserEntity secondPartiUser = secondPartiUserOptional.get();
+
+                    chatEntities.add(new RegularChatEntity(
+                            resultSet.getString("id"),
+                            firstPartiUser,
+                            secondPartiUser));
+                }
+            }
+            return chatEntities;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

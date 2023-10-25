@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<Pane prefHeight="700.0" prefWidth="748.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gov.iti.jets.controllers.ChartsController">
+<children>
+    <ImageView fitHeight="92.0" fitWidth="86.0" layoutX="208.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@../images/users.png" />
+        </image>
+    </ImageView>
+    <Text fx:id="userCount" fill="#095e68" layoutX="214.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0 User" textAlignment="CENTER" wrappingWidth="72.98307228088379" />
+    <ImageView fitHeight="92.0" fitWidth="86.0" layoutX="341.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@../images/messages.png" />
+        </image>
+    </ImageView>
+    <Text fx:id="msgCount" fill="#095e68" layoutX="340.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0 Message" textAlignment="center" wrappingWidth="93.98307228088379" />
+    <BarChart fx:id="barChart" layoutX="59.0" layoutY="230.0" prefHeight="380.0" prefWidth="268.0">
+        <xAxis>
+            <CategoryAxis label="Status" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="No. of Users" side="LEFT" />
+        </yAxis>
+    </BarChart>
+    <PieChart fx:id="countryPieChart" layoutX="430.0" layoutY="106.0" prefHeight="268.0" prefWidth="268.0" />
+    <PieChart fx:id="genderPieChart" layoutX="430.0" layoutY="386.0" prefHeight="268.0" prefWidth="268.0" />
+</children>
+</Pane>
