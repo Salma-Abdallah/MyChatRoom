@@ -16,6 +16,7 @@ import gov.iti.jets.services.ValidationServices;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class AuthenticationControllerImpl extends UnicastRemoteObject implements
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        System.out.println("AuthenticationController??????????????");
         return instance;
     }
 
@@ -46,9 +48,7 @@ public class AuthenticationControllerImpl extends UnicastRemoteObject implements
         EncryptionServices encryptionServices = new EncryptionServices();
 
         String decryptedPassword = encryptionServices.decrypt(loginRequest.getPassword());
-        Optional<UserDto> userOptional = userService.findUserByPhoneNumber(loginRequest.getPhoneNumber());
-        if (userOptional.isPresent()) {
-            UserDto user = userOptional.get();
+        UserDto user = userService.findUserByPhoneNumber(loginRequest.getPhoneNumber());
             String hashedPassword = hashServices.getHashedValue(decryptedPassword, user.getSalt());
             if (hashedPassword.equals(user.getPassword())) {
                 user.setPassword(encryptionServices.encrypt(decryptedPassword));
@@ -56,9 +56,13 @@ public class AuthenticationControllerImpl extends UnicastRemoteObject implements
                         loginRequest.getPassword(),
                         user.getGender(), user.getCountry(), user.getBirthDate(), user.getOnlineStatus(), user.getBio(),
                         user.getPicture(), user.getPictureExtension());
+            System.out.println("login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
                 return response;
             }
-        }
+
+        System.out.println("login!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         return null;
     }
 
@@ -73,30 +77,41 @@ public class AuthenticationControllerImpl extends UnicastRemoteObject implements
         boolean isValidRequest = validationService.validate(validation);
         RegisterResponse response = new RegisterResponse();
 
-        if (isValidRequest) {
+        // if (isValidRequest) {
             byte[] saltBytes = new byte[24];
             new SecureRandom().nextBytes(saltBytes);
             String salt = Base64.getEncoder().encodeToString(saltBytes);
             String decryptedPassword = encryptionService.decrypt(registerRequest.getPassword());
             String hashedPassword = hashService.getHashedValue(decryptedPassword, salt);
-            UserDto user = new UserDto(registerRequest.getUserName(), registerRequest.getPhoneNumber(),
-                    registerRequest.getEmail(),
-                    hashedPassword, salt, registerRequest.getGender(), registerRequest.getCountry(),
-                    registerRequest.getBirthDate());
+            // UserDto user = new UserDto(registerRequest.getUserName(), registerRequest.getPhoneNumber(),
+            //         registerRequest.getEmail(),
+            //         hashedPassword, salt, registerRequest.getGender(), registerRequest.getCountry(),
+            //         registerRequest.getBirthDate());
+
+                     UserDto user = new UserDto("registerRequest.getUserName()", "registerRequest.getPhoneNumber()",
+                    "registerRequest.getEmail()",
+                    hashedPassword, salt, "f", "Egypt",
+                    LocalDate.of(2023, 10, 17));
             userServices.saveUser(user);
-            user = userServices.findUserByPhoneNumber(user.getPhoneNumber()).get();
+            user = userServices.findUserByPhoneNumber(user.getPhoneNumber());
 
             response = new RegisterResponse(user.getUserName(), user.getPhoneNumber(), user.getEmail(),
                     registerRequest.getPassword(), user.getGender(), user.getCountry(), user.getBirthDate(),
                     user.getOnlineStatus(), user.getBio(), user.getPicture(), user.getPictureExtension(), null);
-        } else {
-            response.setValidation(validation);
-        }
+                    System.out.println("register!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+        // } else {
+        //     response.setValidation(validation);
+        //                         System.out.println("register!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+
+        // }
+                            System.out.println("register!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+
         return response;
     }
 
     @Override
     public void logOut(UserDto user) throws RemoteException {
+                    // System.out.println("register!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
 
     }
 

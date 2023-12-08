@@ -2,18 +2,22 @@ package gov.iti.jets.api.validation;
 
 import gov.iti.jets.api.requests.RegisterRequest;
 import gov.iti.jets.api.requests.UserProfileRequest;
+import gov.iti.jets.dto.UserDto;
 import gov.iti.jets.mappers.UserMapper;
+import gov.iti.jets.services.UserServices;
+
 import java.io.Serializable;
 
 public class RegisterValidation implements Serializable, Validation {
 
     private static final long serialVersionUID = -2449817711737079712L;
-    transient private RegisterRequest request;
+    transient private RegisterRequest request = new RegisterRequest();
     private String emailError = null;
     private String phoneNumberError = null;
     
-    private UserProfileRequest usreRequest;
-   
+    private UserProfileRequest usreRequest = new UserProfileRequest();
+
+    private UserServices userServices = new UserServices();
 
     public RegisterValidation() {}
 
@@ -28,17 +32,17 @@ public class RegisterValidation implements Serializable, Validation {
     @Override
     public boolean validate() {
         boolean isValid = true;
-        UserMapper userMapper = new UserMapper();
-        if(userMapper.findUserByPhoneNumber(request.getPhoneNumber()).isPresent()){
+        if(userServices.findUserByPhoneNumber(request.getPhoneNumber()) != null){
             phoneNumberError = "Phone number already exists";
             isValid = false;
         }
-        if(userMapper.findUserByEmail(request.getEmail()).isPresent()){
+        if(userServices.findUserByEmail(request.getEmail()) != null ){
             emailError = "Email already exists";
             isValid = false;
         }
         return isValid;
     }
+
     public String getEmailError() {
         return emailError;
     }
@@ -60,8 +64,8 @@ public class RegisterValidation implements Serializable, Validation {
 
         boolean isValid = true;
         UserMapper userMapper = new UserMapper();
-        if(userMapper.findUserByPhoneNumber(usreRequest.getNewPhoneNumber()).isPresent() ){
-            if(userMapper.findUserByPhoneNumber(usreRequest.getNewPhoneNumber()).get() == userMapper.findUserByPhoneNumber(usreRequest.getOldPhoneNumber()).get()){
+        if(userServices.findUserByPhoneNumber(usreRequest.getNewPhoneNumber()) !=null ){
+            if(userServices.findUserByPhoneNumber(usreRequest.getNewPhoneNumber()).equals(userServices.findUserByPhoneNumber(usreRequest.getOldPhoneNumber()))){
                 phoneNumberError = "your request is done successfully";
                 isValid = true;
             }else {
@@ -69,8 +73,8 @@ public class RegisterValidation implements Serializable, Validation {
                 isValid = false;
             }
         }
-        if(userMapper.findUserByEmail(usreRequest.getNewEmail()).isPresent()){
-            if(userMapper.findUserByEmail(usreRequest.getNewEmail()).get() == userMapper.findUserByEmail(usreRequest.getOldEmail()).get()) {
+        if(userServices.findUserByEmail(usreRequest.getNewEmail()) != null){
+            if(userServices.findUserByEmail(usreRequest.getNewEmail()).getClass() == userServices.findUserByEmail(usreRequest.getOldEmail()).getClass()) {
                 emailError = "your request is done successfully";
                 isValid = true;
             }

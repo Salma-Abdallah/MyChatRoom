@@ -2,7 +2,9 @@ package gov.iti.jets.dto;
 
 import gov.iti.jets.entities.UserEntity;
 
-public class RegularChatDto extends ChatDto{
+import java.io.Serializable;
+
+public class RegularChatDto extends ChatDto implements Serializable {
     private static final long serialVersionUID = 5887637195618767821L;
     private UserDto firstParticipant;
     private UserDto secondParticipant;
@@ -13,9 +15,9 @@ public class RegularChatDto extends ChatDto{
         this.secondParticipant = secondParticipant;
     }
 
-    public RegularChatDto(String chatId, UserDto firstParticipant) {
-        this.chatId = chatId;
+    public RegularChatDto(UserDto firstParticipant, UserDto secondParticipant) {
         this.firstParticipant = firstParticipant;
+        this.secondParticipant = secondParticipant;
     }
     public RegularChatDto (){}
 
@@ -42,12 +44,13 @@ public class RegularChatDto extends ChatDto{
         this.secondParticipant = secondParticipant;
     }
 
-    @Override
-    public String toString() {
-        return "RegularChat{" +
-                "firstParticipant=" + firstParticipant +
-                ", secondParticipant=" + secondParticipant +
-                ", chatId='" + chatId + '\'' +
-                '}';
-    }
+    //    @Override
+    //    public String toString() {
+    //        return "RegularChat{" +
+    //                "firstParticipant=" + firstParticipant +
+    //                ", secondParticipant=" + secondParticipant +
+    //                ", chatId='" + chatId + '\'' +
+    //                '}';
+    //    }
+
 }

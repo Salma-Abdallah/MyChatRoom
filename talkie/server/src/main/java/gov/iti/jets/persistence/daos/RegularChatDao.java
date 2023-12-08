@@ -13,7 +13,7 @@ import gov.iti.jets.entities.RegularChatEntity;
 import gov.iti.jets.entities.UserEntity;
 import gov.iti.jets.persistence.DBConnection;
 
-public class RegularChatDao {
+public class RegularChatDao extends ChatDao{
 
     public RegularChatEntity save(RegularChatEntity regularChatEntity) {
         String query = """

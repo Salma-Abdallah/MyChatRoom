@@ -1,18 +1,21 @@
 package gov.iti.jets.entities;
 
 
+import gov.iti.jets.mappers.ChatMapper;
+
 public class ChatEntity {
-     private String id;
+     protected String chatId;
 
     public ChatEntity(String id) {
-        this.id = id;
+        this.chatId = id;
     }
 
-    public String getId() {
-        return id;
+    public ChatEntity(){}
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setChatId(String id) {
+        this.chatId = id;
     }
 }

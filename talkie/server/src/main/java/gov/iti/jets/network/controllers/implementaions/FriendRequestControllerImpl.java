@@ -38,43 +38,41 @@ public class FriendRequestControllerImpl extends UnicastRemoteObject implements 
 
     private FriendRequestControllerImpl() throws RemoteException {}
     private ChatServices chatServices = new ChatServices();
-    @Override
-    public SendFriendReqResponse sendFriendRequest (SendFriendReqRequest request) throws RemoteException {
-        
-        String senderPhoneNumber = request.getSenderPhoneNumber();
-        String receiverPhoneNumber = request.getReceiverPhoneNumber();
-        FriendRequestServices friendRequestService = new FriendRequestServices();
-        UserServices userService = new UserServices();
-        List<RegularChatDto> chats = chatServices.getAllRegularChats(senderPhoneNumber);
-        chats = chats.stream().filter((chat) -> chat.getFirstParticipant().getPhoneNumber().equals(receiverPhoneNumber)).toList();
-        if(userService.findUserByPhoneNumber(receiverPhoneNumber).isEmpty()){
-            return new SendFriendReqResponse(null, null, "User not found");
-        }
-        if(friendRequestService.findFriendRequestByBoth(senderPhoneNumber, receiverPhoneNumber).isPresent()){
-            return new SendFriendReqResponse(null, null, "Request already sent.");
-        }
-        else if(friendRequestService.findFriendRequestByBoth(receiverPhoneNumber, senderPhoneNumber).isPresent()){
-            friendRequestService.delete(receiverPhoneNumber, senderPhoneNumber);
-            Optional<RegularChatDto> regularChat = chatServices.saveRegularChat(senderPhoneNumber, receiverPhoneNumber);
-            CallbackController cb = OnlineStatusControllerImpl.getUsers().get(senderPhoneNumber);
-            if(cb != null){
-                cb.createNewRegularChat(regularChat.get());
-            }
-            return new SendFriendReqResponse(null, regularChat.get(), null);
-        } else if (chats.size() == 0) {
-            Optional<FriendRequestDto> friendRequest = friendRequestService.saveFriendRequest(senderPhoneNumber, receiverPhoneNumber);
-            if(friendRequest.isPresent()){
-                CallbackController cb = OnlineStatusControllerImpl.getUsers().get(receiverPhoneNumber);
-                if(cb != null){
-                    cb.createNewFriendRequest(friendRequestService
-                            .findFriendRequestByBoth(senderPhoneNumber, receiverPhoneNumber)
-                            .get());
-                }
-                return new SendFriendReqResponse(friendRequest.get(), null, null);
-            }
-        }
-        return new SendFriendReqResponse(null, null, "Already in your friend list");
-    }
+//    @Override
+//    public SendFriendReqResponse sendFriendRequest (SendFriendReqRequest request) throws RemoteException {
+//
+//        String senderPhoneNumber = request.getSenderPhoneNumber();
+//        String receiverPhoneNumber = request.getReceiverPhoneNumber();
+//        FriendRequestServices friendRequestService = new FriendRequestServices();
+//        UserServices userService = new UserServices();
+//        List<RegularChatDto> chats = chatServices.getAllRegularChats(senderPhoneNumber);
+//        chats = chats.stream().filter((chat) -> chat.getFirstParticipant().getPhoneNumber().equals(receiverPhoneNumber)).toList();
+//        if(userService.findUserByPhoneNumber(receiverPhoneNumber).isEmpty()){
+//            return new SendFriendReqResponse(null, null, "User not found");
+//        }
+//        if(friendRequestService.findFriendRequestByBoth(senderPhoneNumber, receiverPhoneNumber).isPresent()){
+//            return new SendFriendReqResponse(null, null, "Request already sent.");
+//        }
+//        else if(friendRequestService.findFriendRequestByBoth(receiverPhoneNumber, senderPhoneNumber).isPresent()){
+//            friendRequestService.delete(receiverPhoneNumber, senderPhoneNumber);
+//            RegularChatDto regularChat = chatServices.saveRegularChat(senderPhoneNumber, receiverPhoneNumber);
+//            CallbackController cb = OnlineStatusControllerImpl.getUsers().get(senderPhoneNumber);
+//            if(cb != null){
+//                cb.createNewRegularChat(regularChat);
+//            }
+//            return new SendFriendReqResponse(null, regularChat, null);
+//        } else if (chats.size() == 0) {
+//            FriendRequestDto friendRequest = friendRequestService.saveFriendRequest(senderPhoneNumber, receiverPhoneNumber);
+//                CallbackController cb = OnlineStatusControllerImpl.getUsers().get(receiverPhoneNumber);
+//                if(cb != null){
+//                    cb.createNewFriendRequest(friendRequestService
+//                            .findFriendRequestByBoth(senderPhoneNumber, receiverPhoneNumber)
+//                            .get());
+//                }
+//                return new SendFriendReqResponse(friendRequest, null, null);
+//        }
+//        return new SendFriendReqResponse(null, null, "Already in your friend list");
+//    }
     @Override
     public CancelFriendRequestResponse cancel(CancelFriendRequest cancelFriendRequest) throws RemoteException {
         CallbackController cb = OnlineStatusControllerImpl.getUsers().get(cancelFriendRequest.getFriendPhoneNumber());

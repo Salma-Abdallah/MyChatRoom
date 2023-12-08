@@ -80,7 +80,7 @@ public class ChatControllerImpl extends UnicastRemoteObject implements ChatContr
             // if(cb != null){
             //     cb.addCurrentUserToGroupChat(groupChat);
             // }
-            return new AddUserToGCResponse(userServices.findUserByPhoneNumber(phoneNumber).get(), "error");
+            return new AddUserToGCResponse(userServices.findUserByPhoneNumber(phoneNumber), "error");
 
         // throw new UnsupportedOperationException("Unimplemented method 'addUserToGroupChat'");
     }

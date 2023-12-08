@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 public interface FriendRequestController extends Remote {
 
-   SendFriendReqResponse sendFriendRequest (SendFriendReqRequest sendFriendReqRequest) throws  RemoteException;
+//   SendFriendReqResponse sendFriendRequest (SendFriendReqRequest sendFriendReqRequest) throws  RemoteException;
    CancelFriendRequestResponse cancel (CancelFriendRequest cancelFriendRequest) throws RemoteException;
    RefuseFriendFriendResponse refuse (RefuseFriendRequest refuseFriendRequest) throws RemoteException;
    AcceptFriendResponse accept (AcceptFriendRequest acceptFriendRequest) throws  RemoteException;
